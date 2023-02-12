@@ -2,13 +2,12 @@
   - 关于本插件
     - 实现类似闹钟的功能，添加任务后将会在指定时间后提醒
     - 任务指令：
-      - 添加任务：[xx秒|xx分钟|xx小时|xx天]后提醒我 睡觉
+      - 添加任务：[xx秒|xx分钟|xx小时|xx天]后提醒我睡觉
       - 查看任务：定时任务列表
       - 删除任务：删除任务 + id
       
   - by 松坂砂糖 https://github.com/Matsuzaka7/yunzai_task
 */
-
 // 时间转换
 const parseTime = (str) => {
   const timeRegex = /(\d+)(秒|分钟|小时|天)/g;
@@ -57,10 +56,9 @@ const cardMessage = async (e, stu) => {
   let forwardMsg = stu.map(item => {
     return {
       message: 
-`id：${item.id}
-任务：${item.content}
+`任务：${item.content}
 执行时间：${formatTimestamp(item.endTime)}
-如要删除该任务请回复：删除任务${item.id}`,
+如需删除该任务请回复：删除任务${item.id}`,
       nickname: e.sender.card || e.sender.nickname,
       user_id: e.sender.user_id
     }
@@ -116,7 +114,7 @@ export class timeTask extends plugin {
       const qq = e.user.qq;
       const newTime = Date.now();
       const timer = parseTime(msg);
-      const content = msg.split(" ")[1].trim();
+      const content = msg.split("后")[1].trim();
       if (!content) return e.reply(`空内容哦`);
       if (timer > config.maxTime) {
         e.reply("最大时间不超过2天");
@@ -162,7 +160,7 @@ export class timeTask extends plugin {
           ],
         });
       }
-      e.reply(`好的，${msg.split(" ")[0]}提醒你`);
+      e.reply(`好的，${msg.split("后")[0]}后提醒你`);
     } catch (e) {}
 
     return true;
@@ -188,7 +186,7 @@ export class timeTask extends plugin {
     if (findUser && findUser?.tasks.length !== 0) {
       cardMessage(e, findUser.tasks)
     } else {
-      e.reply('目前还没有在执行的任务哦')
+      e.reply('您目前还没有在执行的任务哦')
     }
   }
 }
